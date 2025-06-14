@@ -14,7 +14,7 @@ st.write("Upload a satellite image to detect presence of Fire or Not Fire")
 # Load model (cache it)
 @st.cache_resource
 def load_fire_model():
-    model = load_model("fire_detection_model.h5")
+    model = load_model("Forest_fire_detection_model.h5")
     return model
 
 model = load_fire_model()
