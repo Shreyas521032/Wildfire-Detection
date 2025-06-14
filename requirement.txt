@@ -4,3 +4,11 @@ numpy
 Pillow
 protobuf
 h5py
+
+streamlit
+numpy
+Pillow
+tensorflow
+
+onnxruntime==1.15.1
+onnx==1.14.1
