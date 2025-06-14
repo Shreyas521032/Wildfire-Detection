@@ -8,7 +8,7 @@
 
 > A lightweight and interactive web application powered by a deep learning model to detect **fire** in satellite images in real-time. Designed for wildfire detection, remote sensing, and early warning systems.
 
-Deployed Project : https://wildfire-detection-shreyas.streamlit.app/[https://wildfire-detection-shreyas.streamlit.app]
+Deployed Project : [https://wildfire-detection-shreyas.streamlit.app/](https://wildfire-detection-shreyas.streamlit.app)
 
 ## 🧠 About the Model
 
