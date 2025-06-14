@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
+import onnxruntime as ort
 from PIL import Image
 import io
 from datetime import datetime
@@ -14,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS (same as original)
 st.markdown("""
 <style>
     .main-header {
@@ -53,11 +52,6 @@ st.markdown("""
         border: 2px solid #28a745;
         color: #28a745;
     }
-    .stats-container {
-        display: flex;
-        justify-content: space-around;
-        margin: 20px 0;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -82,15 +76,17 @@ with st.sidebar:
     st.header("Dataset Credit")
     st.markdown("Dataset: [Wildfire Prediction Dataset](https://www.kaggle.com/datasets/abdelghaniaaba/wildfire-prediction-dataset)")
 
-# Load model function
+# Load model function using ONNX Runtime
 @st.cache_resource
 def load_fire_model():
-    """Load the pre-trained model"""
+    """Load the pre-trained ONNX model"""
     try:
-        model = load_model('fire_model.h5')
-        return model
+        # Load ONNX model
+        session = ort.InferenceSession('fire_model.onnx')
+        return session
     except Exception as e:
         st.error(f"Error loading model: {e}")
+        st.info("Make sure you have converted your TensorFlow model to ONNX format using: tf2onnx")
         return None
 
 # Preprocess image function
@@ -99,19 +95,23 @@ def preprocess_image(image):
     # Resize to match model input size
     img = image.resize((64, 64))
     # Convert to numpy array and normalize
-    img_array = np.array(img) / 255.0
+    img_array = np.array(img, dtype=np.float32) / 255.0
     # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-# Prediction function
-def predict_fire(image, model):
-    """Make prediction using the model"""
+# Prediction function using ONNX Runtime
+def predict_fire(image, session):
+    """Make prediction using the ONNX model"""
     try:
         # Preprocess image
         processed_img = preprocess_image(image)
+        
+        # Get input name from the model
+        input_name = session.get_inputs()[0].name
+        
         # Make prediction
-        prediction = model.predict(processed_img)[0][0]
+        prediction = session.run(None, {input_name: processed_img})[0][0][0]
         return prediction
     except Exception as e:
         st.error(f"Error during prediction: {e}")
@@ -203,4 +203,4 @@ st.markdown("""
 
 # Footer
 st.markdown("---")
-st.markdown("Developed for wildfire detection and monitoring using satellite imagery. Built with TensorFlow and Streamlit.")
+st.markdown("Developed for wildfire detection and monitoring using satellite imagery. Built with ONNX Runtime and Streamlit.")
