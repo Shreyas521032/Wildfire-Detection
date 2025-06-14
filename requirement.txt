@@ -1,9 +1,4 @@
 streamlit
 tensorflow
-numpy
 Pillow
-protobuf
-h5py
-onnxruntime
-onnx
-joblib
+numpy
