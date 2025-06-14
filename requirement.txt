@@ -4,4 +4,3 @@ numpy
 Pillow
 protobuf
 h5py
-python=3.10
