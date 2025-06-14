@@ -6,3 +6,4 @@ protobuf
 h5py
 onnxruntime
 onnx
+joblib
